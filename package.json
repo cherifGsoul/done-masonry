@@ -1,0 +1,89 @@
+{
+  "name": "done-masonry",
+  "version": "0.0.0",
+  "description": "Masonry layout donejs plugin",
+  "homepage": "",
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/cherifGsoul/done-masonry.git"
+  },
+  "author": {
+    "name": "Cherif BOUCHELAGHEM",
+    "email": "cherif.bouchelaghem@gmail.com",
+    "url": ""
+  },
+  "scripts": {
+    "preversion": "npm test && npm run build",
+    "version": "git commit -am \"Update version number\" && git checkout -b release && git add -f dist/",
+    "postpublish": "git push --tags && git checkout master && git branch -D release && git push",
+    "testee": "testee test.html --browsers firefox",
+    "test": "npm run jshint && npm run testee",
+    "jshint": "jshint ./*.js ./src/ --config",
+    "release:patch": "npm version patch && npm publish",
+    "release:minor": "npm version minor && npm publish",
+    "release:major": "npm version major && npm publish",
+    "build": "node build.js",
+    "develop": "done-serve --static --develop --port 8080"
+  },
+  "main": "dist/cjs/done-masonry",
+  "browser": {
+    "transform": [
+      "cssify"
+    ]
+  },
+  "browserify": {
+    "transform": [
+      "cssify"
+    ]
+  },
+  "keywords": [
+    "ui",
+    "masonry",
+    "donejs",
+    "canjs",
+    "donejs-plugin"
+  ],
+  "steal": {
+    "main": "done-masonry",
+    "configDependencies": [
+      "live-reload"
+    ],
+    "npmIgnore": [
+      "testee",
+      "generator-donejs",
+      "donejs-cli",
+      "steal-tools"
+    ],
+    "plugins": [
+      "steal-less",
+      "steal-stache"
+    ],
+    "directories": {
+      "lib": "src"
+    }
+  },
+  "dependencies": {
+    "bootstrap": "^3.3.7",
+    "bootstrap-sass": "^3.3.7",
+    "can-component": "^3.3.3",
+    "can-define": "^1.4.2",
+    "can-stache": "^3.6.1",
+    "can-view-autorender": "^3.1.1",
+    "cssify": "^0.6.0",
+    "masonry-layout": "^4.2.0",
+    "steal-less": "^1.2.0",
+    "steal-stache": "^3.1.1"
+  },
+  "devDependencies": {
+    "done-component": "^1.0.0",
+    "done-serve": "^1.4.0",
+    "donejs-cli": "^1.0.2",
+    "generator-donejs": "^1.0.7",
+    "jshint": "^2.9.5",
+    "steal": "^1.5.9",
+    "steal-qunit": "^1.0.1",
+    "steal-tools": "^1.8.3",
+    "testee": "^0.3.0"
+  },
+  "license": "MIT"
+}

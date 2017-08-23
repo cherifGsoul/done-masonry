@@ -1,0 +1,19 @@
+<can-component tag="done-masonry">
+  <style type="less">
+    display: block;
+
+    p { font-weight: bold; }
+  </style>
+  <view>
+    <p>{{message}}</p>
+  </view>
+  <script type="view-model">
+    import DefineMap from 'can-define/map/';
+
+    export default DefineMap.extend({
+      message: {
+        value: 'This is the done-masonry component'
+      }
+    });
+  </script>
+</can-component>
