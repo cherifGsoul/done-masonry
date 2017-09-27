@@ -1,69 +1,72 @@
-<link rel="stylesheet" href="../../node_modules/bootstrap/dist/css/bootstrap.css">
-<script type="text/stache" can-autorender>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <link rel="stylesheet" href="../../node_modules/bootstrap/dist/css/bootstrap.css">
+  <title>Document</title>
+</head>
+<body>
+  <script type="text/stache" id="demo-html" can-autorender>
   <can-import from="done-masonry/mansonry-layout/" />
-  
+    
     <div class="container">
-      <masonry-layout>
-        <div class="wall" masonry-wall>
-  
-
-
-          <div class="grid-sizer col-md-3"></div>    
-          <div class="col-md-3 grid-item" masonry-brick>
-            <div class="grid-item-content">
-              lorem
-            </div>
-          </div>
-
-          <div class="col-md-3 grid-item" masonry-brick>
-            <div class="grid-item-content">Lorem ipsum dolor sit amet</div>
-          </div>
-
-          <div class="col-md-3 grid-item" masonry-brick>
-            <div class="grid-item-content">Lorem ipsum dolor sit amet</div>
-          </div>
-
-          <div class="col-md-3 grid-item" masonry-brick>
-            <div class="grid-item-content">Lorem ipsum dolor sit amet</div>
-          </div>
-
-          <div class="col-md-3 grid-item" masonry-brick>
-            <div class="grid-item-content">Lorem ipsum dolor sit amet</div>
-          </div>
-
-          <div class="col-md-3 grid-item" masonry-brick>
-            <div class="grid-item-content">Lorem ipsum dolor sit amet</div>
-          </div>
-
-          <div class="col-md-3 grid-item" masonry-brick>
-            <div class="grid-item-content">Lorem ipsum dolor sit amet</div>
-          </div>
-
-          <div class="col-md-3 grid-item" masonry-brick>
-            <div class="grid-item-content">Lorem ipsum dolor sit amet</div>
-          </div>
-
-          <div class="col-md-3 grid-item" masonry-brick>
-            <div class="grid-item-content">Lorem ipsum dolor sit amet</div>
-          </div>
-          <div class="col-md-3 grid-item" masonry-brick>
-            <div class="grid-item-content">Lorem ipsum dolor sit amet</div>
-          </div>
-          <div class="col-md-3 grid-item" masonry-brick>
-            <div class="grid-item-content">Lorem ipsum dolor sit amet</div>
-          </div>
-          <div class="col-md-3 grid-item" masonry-brick>
-            <div class="grid-item-content">Lorem ipsum dolor sit amet</div>
-          </div>
-          <div class="col-md-3 grid-item" masonry-brick>
-            <div class="grid-item-content">Lorem ipsum dolor sit amet</div>
-          </div>
-
-
-      </div>
-        </masonry-layout>  
+      
+      
+        
+      
+      <masonry-layout column-width=".grid-sizer" item-selector=".grid-item" percent-position="true">
+        <div class="row">
+          <button type="button" class="btn btn-primary js-add" on:click="addItem()">Add</button>  
         </div>
 
+        <div class="row">
+        
+        <div class="wall" masonry-wall>
+
+
+          {{#each items}}
+          <div class="grid-sizer col-xs-12 col-md-2"></div>    
+          <div class="col-xs-12 col-md-2 grid-item" masonry-brick>
+            <div class="thumbnail">
+              <img src="{{imgsrc}}" alt="">
+              <div class="caption">
+                {{caption}}
+              </div>
+            </div>
+          </div>
+          {{/each}}
+
+        </div>
+      </masonry-layout>  
+    </div>
+  </div>
+
 </script>
-<script src="../../node_modules/steal/steal.js"
-        main="can-view-autorender"></script>
+<script src="../../node_modules/steal/steal.js" id="demo-source" main="can-view-autorender">
+  import $ from "jquery";
+  import domData from "can-util/dom/data/data";
+  import DefineMap from "can-define/map/map";
+  import DefineList from "can-define/list/list";
+
+  var items = [
+    {caption: 'Lorem ipsum dolor sit amet, consectetur adipisicing elit.', imgsrc:'http://pipsum.com/435x310.jpg'},
+    {caption: 'Lorem ipsum dolor sit amet, consectetur adipisicing elit. Iure accusamus iusto, voluptas sunt in velit? Eos aut officia quibusdam, temporibus culpa, recusandae magni dolores ab, inventore nihil minima ipsam possimus?', imgsrc:'http://pipsum.com/435x310.jpg'}
+  ];
+
+  var element = document.getElementById("demo-html");
+  var vm = new DefineMap({
+    items: new DefineList(items),
+    addItem: function() {
+      this.items.push({
+        caption: 'Lorem ipsum dolor sit amet, consectetur adipisicing elit.', imgsrc:'http://pipsum.com/435x310.jpg'
+      });
+    }
+  });
+  domData.set.call(element, "viewModel", vm);
+
+</script>
+
+</body>
+</html>

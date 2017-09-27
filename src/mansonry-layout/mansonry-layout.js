@@ -9,6 +9,18 @@ import Masonry from "masonry-layout";
 export const ViewModel = DefineMap.extend({
   masonry: {
     type: "*"
+  },
+  columnWidth: {
+    type: "*",
+    value: null
+  },
+  itemSelector: {
+    type: "*",
+    value: null
+  },
+  percentPosition: {
+    type: "boolean",
+    value: null
   }
 });
 

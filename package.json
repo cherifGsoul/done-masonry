@@ -80,6 +80,7 @@
     "done-serve": "^1.4.0",
     "donejs-cli": "^1.0.2",
     "generator-donejs": "^1.0.7",
+    "jquery": "^3.2.1",
     "jshint": "^2.9.5",
     "steal": "^1.5.9",
     "steal-qunit": "^1.0.1",

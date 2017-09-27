@@ -1,11 +1,16 @@
 import viewCallbacks from 'can-view-callbacks';
 import Masonry from "masonry-layout";
 import ImageLoaded from 'imagesloaded';
+import domEvents from "can-util/dom/events/events";
 
 viewCallbacks.attr('masonry-wall',function(el, attrData){
   var masonry;
   var scope;
+  
   scope = attrData.scope;
+
+  console.log(scope);
+
   masonry = new Masonry(el, {
     itemSelector: '.grid-item',
     columnWidth: ".grid-sizer",
@@ -19,13 +24,18 @@ viewCallbacks.attr('masonry-wall',function(el, attrData){
 
 
 viewCallbacks.attr('masonry-brick', function(el, attrData){
+
   var scope = attrData.scope;
   var masonry;
-  
-  new ImageLoaded(el, function () {
+
+  var reloadMasonry = function() {
     masonry = scope.get('masonry');
     
     masonry.reloadItems();
     masonry.layout();
+  };
+  
+  new ImageLoaded(el, function () {
+    reloadMasonry();
   });
 });
