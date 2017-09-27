@@ -1,6 +1,2 @@
 <can-import from="./masonry-wall-attr" />
-<div class="wall" masonry-wall="true">
-    <div class="grid-item">Lorem ipsum dolor sit amet</div>
-    <div class="grid-item">Lorem ipsum dolor sit amet</div>
-    <div class="grid-item">Lorem ipsum dolor sit amet</div>
-</div>
+<content/>

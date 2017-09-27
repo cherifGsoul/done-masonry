@@ -7,13 +7,14 @@ import Masonry from "masonry-layout";
 */
 
 export const ViewModel = DefineMap.extend({
-  message: {
-    value: 'This is the masonry-layout component'
+  masonry: {
+    type: "*"
   }
 });
 
 export default Component.extend({
   tag: 'masonry-layout',
   ViewModel,
-  view
+  view,
+  leakScope: true
 });
