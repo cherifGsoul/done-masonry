@@ -6,20 +6,14 @@ import domEvents from "can-util/dom/events/events";
 viewCallbacks.attr('masonry-wall',function(el, attrData){
   var masonry;
   var scope;
-  
   scope = attrData.scope;
-
-  console.log(scope);
-
   masonry = new Masonry(el, {
     itemSelector: '.grid-item',
     columnWidth: ".grid-sizer",
-    percentPosition: true
+    percentPosition: true,
+    transitionDuration: '0.8s'
   });
-
   scope.set('masonry', masonry);
-
-
 });
 
 
@@ -30,12 +24,13 @@ viewCallbacks.attr('masonry-brick', function(el, attrData){
 
   var reloadMasonry = function() {
     masonry = scope.get('masonry');
-    
     masonry.reloadItems();
     masonry.layout();
   };
   
-  new ImageLoaded(el, function () {
-    reloadMasonry();
-  });
+  new ImageLoaded(el, reloadMasonry);
+
+  domEvents.addEventListener.call(el,"inserted", reloadMasonry);
+
+  domEvents.addEventListener.call(el,"removed", reloadMasonry);
 });

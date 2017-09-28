@@ -28,14 +28,14 @@
 
           {{#each items}}
           <div class="grid-sizer col-xs-12 col-md-2"></div>    
-          <div class="col-xs-12 col-md-2 grid-item" masonry-brick>
+          <div class="col-xs-12 col-md-2 grid-item js-item" masonry-brick on:click="remove(%index)">
             <div class="thumbnail">
               <img src="{{imgsrc}}" alt="">
               <div class="caption">
                 {{caption}}
               </div>
             </div>
-          </div>
+          </div> 
           {{/each}}
 
         </div>
@@ -62,6 +62,13 @@
       this.items.push({
         caption: 'Lorem ipsum dolor sit amet, consectetur adipisicing elit.', imgsrc:'http://pipsum.com/435x310.jpg'
       });
+    },
+    remove: function(indx) {
+      
+      
+      if (indx > -1) {
+        this.items.splice(indx,1);
+      }
     }
   });
   domData.set.call(element, "viewModel", vm);
