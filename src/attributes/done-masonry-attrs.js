@@ -3,6 +3,9 @@ import Masonry from "masonry-layout";
 import ImageLoaded from 'imagesloaded';
 import domEvents from "can-util/dom/events/events";
 
+/**
+ * initialize Masonry grid plugin
+ */
 viewCallbacks.attr('masonry-wall',function(el, attrData){
   var masonry;
   var scope;
@@ -16,7 +19,9 @@ viewCallbacks.attr('masonry-wall',function(el, attrData){
   scope.set('masonry', masonry);
 });
 
-
+/**
+ * reload Masonry for inserted/removed items on/from the grid
+ */
 viewCallbacks.attr('masonry-brick', function(el, attrData){
 
   var scope = attrData.scope;
@@ -27,7 +32,7 @@ viewCallbacks.attr('masonry-brick', function(el, attrData){
     masonry.reloadItems();
     masonry.layout();
   };
-  
+
   new ImageLoaded(el, reloadMasonry);
 
   domEvents.addEventListener.call(el,"inserted", reloadMasonry);
