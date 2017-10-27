@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <link rel="stylesheet" href="../node_modules/bootstrap/dist/css/bootstrap.css">
+  <title>Document</title>
+</head>
+<body>
+  <div id='out'></div>
+  
+  <script id="demo-html" type="text/stache">
+    <div class="container-fluid">
+      <grid-app>
+        
+        <cards-grid promiseData:from="cardsPromise">
+          {{#if items.length}}
+            <done-masonry masonryOptions:from="masonryOptions">
+              <div class="row">
+                <div class="wall" masonry-wall>
+                <div class="grid-sizer col-xs-12 col-md-2"></div>
+                  {{#each ../items}}
+                    <div class="col-xs-12 col-md-2 grid-item js-item" masonry-brick>
+                      <div class="thumbnail">
+                        <img src="http://pipsum.com/{{picture}}" alt="">
+                        <div class="caption">
+                          {{description}}
+                        </div>
+                      </div>
+                    </div>
+                  {{/each}}
+                </div>
+              </div>
+            </done-masonry>
+          {{/if}}
+          
+          {{#if waiting}}
+            loading
+          {{/if}}
+        </cards-grid>
+        <load-more paginate:from='paginate'></load-more>
+      </grid-app>
+    </div>
+  </script>
+
+<script src="../node_modules/steal/steal.js" id="demo-source" main="@empty">
+    import ajax from 'can-ajax';
+    import DefineMap from "can-define/map/map";
+    import DefineList from "can-define/list/list";
+    import Component from "can-component";
+    import set from "can-set";
+    import superMap from "can-connect/can/super-map/super-map";
+    import stache from "can-stache";
+    import fixture from "can-fixture";
+    import compute from "can-compute";
+    import "done-masonry/done-masonry";
+
+    var Card = DefineMap.extend({
+      id: "number",
+      picture: "string",
+      description: "string"
+    });
+
+    Card.List = DefineList.extend({
+      "#": Card,
+      count: 'number'
+    });
+
+    var cardAlgebra = new set.Algebra(
+      set.props.offsetLimit("offset", "limit")    
+    );
+
+    superMap({
+      idProp: "id",
+      Map: Card,
+      List: Card.List,
+      url: "/cards",
+      name: "card",
+      algebra: cardAlgebra
+    });
+
+    var cardStore = fixture.store(1000,
+      function(i){
+      return {
+        id:i+1,
+        picture: "435x310.jpg",
+        description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Duis sodales laoreet varius."
+      }
+    },
+    cardAlgebra);
+    fixture("/cards/{id}", cardStore);
+    fixture.delay = 2000;
+
+  var Paginate = DefineMap.extend({
+    count: {
+      value: Infinity,
+      get: function(lastSetCount) {
+        return lastSetCount && lastSetCount.isComputed ? lastSetCount() : lastSetCount;
+      }
+    },
+    offset: {
+      value: 0,
+      set: function(newOffset) {
+        return newOffset < 0 ?
+          0 :
+          Math.min(newOffset, !isNaN(this.count - 1) ?
+            this.count - 1 :
+            Infinity);
+      }
+    },
+    limit: {
+      value: 5
+    },
+    page: {
+      get: function() {
+        return Math.floor(this.offset / this.limit) + 1;
+      },
+      set: function(newVal) {
+        this.offset = (parseInt(newVal, 10) - 1) * this.limit;
+      }
+    },
+    pageCount: {
+      get: function() {
+        return this.count ?
+          Math.ceil(this.count / this.limit) : null;
+      }
+    },
+    next: function() {
+      this.offset = this.offset + this.limit;
+    },
+    canNext: function() {
+		  return this.offset < this.count - this.limit;
+	  },
+  });
+
+  var AppViewModel = DefineMap.extend({
+    paginate: {
+      value: function() {
+        return new Paginate({
+          limit: 5,
+          count: compute(this, "cardsPromise.value.count")
+        });
+      }
+    },
+   cardsPromise: {
+      get: function() {
+        return Card.getList({
+          limit: this.paginate.limit,
+          offset: this.paginate.offset
+        });
+      }
+    }
+  });
+
+  Component.extend({
+    tag: "grid-app",
+    ViewModel: AppViewModel,
+    leakScope: true
+  });
+
+  var GridViewModel = DefineMap.extend({
+    promiseData: "*",
+    items: {
+      Value: DefineList,
+      get: function(lastSet, resolve) {
+        this.promiseData.then(function(data){
+          data.forEach(function(item){
+            lastSet.push(item);
+          })
+          resolve(lastSet);
+        });
+      }
+    },
+    waiting: {
+      get: function(lastSet, resolve) {
+        var promise = this.promiseData;
+        promise.then(function() {
+          resolve(false);
+        });
+        return true;
+      }
+    },
+    get masonryOptions() {
+      return {
+        columnWidth: ".grid-sizer",
+        itemSelector: ".grid-item",
+        percentPosition: true,
+        transitionDuration: '.5s'
+      }
+    }
+  });
+
+  Component.extend({
+    tag: "cards-grid",
+    //view: stache('<done-masonry masonryOptions:from="masonryOptions"'),
+    ViewModel: GridViewModel,
+    leakScope: true
+  });
+
+  Component.extend({
+    tag: 'load-more',
+    view: stache('<a href="javascript://"' +
+		        'class="next {{#paginate.canNext()}}enabled{{/paginate.canNext()}}" on:click="paginate.next()">Load more</a>')
+  });
+
+  var template = stache.from('demo-html');
+  document.getElementById("out").appendChild(template({}));
+
+  </script>
+</body>
+</html>

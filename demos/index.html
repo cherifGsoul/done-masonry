@@ -9,14 +9,14 @@
 </head>
 <body>
   <script type="text/stache" id="demo-html" can-autorender>
-    <can-import from="done-masonry/" />
+    <can-import from="done-masonry/done-masonry" />
 
     <div class="container">
 
 
 
 
-      <masonry-layout column-width=".grid-sizer" item-selector=".grid-item" percent-position="true">
+      <done-masonry masonryOptions:from="masonryOptions">
         <div class="row">
           <button type="button" class="btn btn-primary js-add" on:click="addItem()">Add</button>
         </div>
@@ -26,8 +26,8 @@
         <div class="wall" masonry-wall>
 
 
-          {{#each items}}
-          <div class="grid-sizer col-xs-12 col-md-2"></div>
+        <div class="grid-sizer col-xs-12 col-md-2"></div>
+          {{#each ./items}}
           <div class="col-xs-12 col-md-2 grid-item js-item" masonry-brick on:click="remove(%index)">
             <div class="thumbnail">
               <img src="{{imgsrc}}" alt="">
@@ -41,12 +41,11 @@
         </div>
 
       </div>
-    </masonry-layout>
+    </done-masonry>
   </div>
 
 </script>
 <script src="../node_modules/steal/steal.js" id="demo-source" main="can-view-autorender">
-  import $ from "jquery";
   import domData from "can-util/dom/data/data";
   import DefineMap from "can-define/map/map";
   import DefineList from "can-define/list/list";
@@ -69,6 +68,14 @@
 
       if (indx > -1) {
         this.items.splice(indx,1);
+      }
+    },
+    get masonryOptions() {
+      return {
+        columnWidth: ".grid-sizer",
+        itemSelector: ".grid-item",
+        percentPosition: true,
+        transitionDuration: '1s'
       }
     }
   });
